@@ -30,7 +30,7 @@ use cortex_m::{interrupt::Mutex, peripheral::NVIC};
 use bsp::hal::{
     clock::GenericClockController,
     delay::Delay,
-    ehal::blocking::delay::DelayMs,
+    ehal::delay::DelayNs,
     gpio::{Pin, PushPullOutput, PA17},
     pac::{self, interrupt, CorePeripherals, Peripherals},
     prelude::*,
@@ -39,6 +39,7 @@ use bsp::hal::{
         Sercom0,
     },
     time::Hertz,
+    nb
 };
 
 type UartPads0 = uart::Pads<Sercom0, A5Sercom0Pad1, A4Sercom0Pad0>;
@@ -118,7 +119,7 @@ fn main() -> ! {
         NVIC::unmask(interrupt::SERCOM4);
     }
     loop {
-        delay.delay_ms(1000u16);
+        delay.delay_ns(1000000000u32);
         let _ = nb::block!(serial_sercom0.write(b'A'));
     }
 }
